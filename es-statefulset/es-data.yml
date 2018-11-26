@@ -19,12 +19,12 @@ spec:
         readinessProbe:
           tcpSocket:
             port: 9200
-          initialDelaySeconds: 30
+          initialDelaySeconds: 60
           periodSeconds: 10
         livenessProbe:
           tcpSocket:
             port: 9200
-          initialDelaySeconds: 30
+          initialDelaySeconds: 60
           periodSeconds: 20
         volumeMounts:
         - mountPath: /usr/share/elasticsearch/data

@@ -16,6 +16,16 @@ spec:
     spec:
       containers:
       - name: elasticsearch-data
+        readinessProbe:
+          tcpSocket:
+            port: 9200
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 9200
+          initialDelaySeconds: 30
+          periodSeconds: 20
         volumeMounts:
         - mountPath: /usr/share/elasticsearch/data
           name: node

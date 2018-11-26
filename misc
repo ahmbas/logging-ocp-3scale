@@ -1,0 +1,8 @@
+Apicast ENV Vars
+APICAST_ACCESS_LOG_FILE=syslog:server=logstash.3scale.svc.cluster.local:1601
+Elasticsearch ENV Vars
+ES_JAVA_OPTS=-Xms512m -Xmx512m
+discovery.type=single-node
+discovery.zen.ping.unicast.hosts=elasticsearch1
+cluster.name=3scale-cluster
+user elastic pass changeme

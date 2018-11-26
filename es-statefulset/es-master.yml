@@ -1,0 +1,66 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: es-master
+spec:
+  selector:
+    matchLabels:
+      app: es-master
+  serviceName: "es-master"
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: es-master
+    spec:
+      containers:
+      - name: elasticsearch-master
+        volumeMounts:
+        - mountPath: /usr/share/elasticsearch/data
+          name: node
+        image: ahmed/elasticsearch:latest
+        env:
+        - name: ES_JAVA_OPTS
+          value: "-Xms512m -Xmx512m"
+        - name: cluster.name
+          value: "3scale-cluster"
+        - name: node.master
+          value: "true"
+        - name: node.data
+          value: "false"
+        - name: "discovery.zen.minimum_master_nodes"
+          value: "2"
+        - name: discovery.zen.ping.unicast.hosts
+          value: "es-master.3scale.svc.cluster.local:9300"
+        ports:
+        - containerPort: 9200
+          protocol: TCP
+        - containerPort: 9300
+          protocol: TCP
+  volumeClaimTemplates:
+  - metadata:
+      name: node
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: es-master
+  labels:
+    app: es-master
+spec:
+  ports:
+  - name: elasticsearch
+    port: 9200
+    protocol: TCP
+  - name: elasticsearchtransport
+    port: 9300
+    protocol: TCP
+  clusterIP: None
+  selector:
+    app: es-master
